@@ -1,4 +1,0 @@
-python == 3.7
-keras == 2.4.3
-numpy == 1.18.5
-tensorflow == 2.2.0
