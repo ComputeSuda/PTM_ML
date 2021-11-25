@@ -1,7 +1,7 @@
 This repo is for Functional PTM Predictions
 =========================================
 
- ## 1. Purpose
+- ## 1. Purpose
 
     To predict Functional-PTM site using deep learning method.
 
