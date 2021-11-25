@@ -11,9 +11,9 @@ def get_readme():
 
 
 setup(
-    name="PTMFun",
+    name="PTM-ML",
     version="0.0.1b1",
-    description="PTMFun Package",
+    description="PTM-ML Package",
     long_description=get_readme(),
     long_description_content_type='text/markdown',
     # url="http://github.com/theochem/procrustes",
@@ -21,7 +21,7 @@ setup(
     author="QC-Devs Community",
     author_email="qcdevs@gmail.com",
     # package_dir={"PTMFun": "features"},
-    package_dir={"PTM_Function_Prediction": "PTMFun"},
+    package_dir={"PTM-ML_Prediction": "PTM-ML"},
     packages=["PTMFun"],
     install_requires=["numpy>=1.18.5", "scipy>=1.5.0", "pytest>=5.4.3", "sphinx>=2.3.0"],
 )
