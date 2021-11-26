@@ -8,7 +8,7 @@ import sys
 
 def load_data(data_file, label_file):
     """
-    加载测试数据集和测试标签集
+    Load test dataset and test label set
     """
 
     data = np.load(data_file, allow_pickle=True).astype(float)
@@ -19,7 +19,7 @@ def load_data(data_file, label_file):
 
 def load_models(model_file):
     """
-    加载训练好的模型
+    Load the trained model
     """
 
     models = []
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     plt.plot(fpr, tpr, '#4db8cb', label = 'cDL-FuncPhos(AUC=' + roc_auc + ')', linewidth=2)
 
 
-    # 画0.5线
+    # plotting 0.5 line
     plt.legend(loc = 'lower right', fontsize=14)
     plt.plot([0, 1], [0, 1],'r--', linewidth=2)
     plt.xlim([0, 1])

@@ -6,7 +6,7 @@ import sys
 
 def sample_data(data, sample_num):
     """
-    对数据进行采样，采样数量为 sample_num 个
+    Sampling data. The number of sampling is sample_num.
     """
     random_index = random.sample(range(0, data.shape[0]), sample_num)
     
@@ -19,7 +19,7 @@ def sample_data(data, sample_num):
 
 def create_train_test_names(data_file, sample_num):
     """
-    创建训练集数据和测试集数据
+    Create training and test sets
     """
 
     data = pd.read_excel(data_file)
@@ -39,7 +39,7 @@ def create_train_test_names(data_file, sample_num):
         elif functionality in ['FP']:
             data_1.append(uniprot_position) 
 
-    # 从data_0和data_1中各随机采样sample_num个，组成测试集
+    # Randomly sample n samples from Class 0 and class 1 to form a test set
     train_0, test_0 = sample_data(np.array(data_0), sample_num)
     train_1, test_1 = sample_data(np.array(data_1), sample_num)
 
@@ -54,26 +54,23 @@ def create_train_test_names(data_file, sample_num):
 
 def generate_1d_data(data_file, train_names, test_names):
     """
-    读取文件，创建训练集和测试集的一维数据
+    Create train_data_1d and test_data_1d
     """
 
     data = pd.read_excel(data_file)
     # print(data.columns)
 
-    # 把二级结构的字母表示成数字
+    # Represent the letter of the secondary structure into a number
     ss_mapping = {'-':1,'H':2, 'S':3, 'G':4, 'T':5, 'E':6, 'B':7, 'I':8}
     data['secondary_structure'] = data['secondary_structure'].map(ss_mapping)
     
-    # 把空值填充为0
     data = data.fillna(0)
         
-    # 把inf设为1, -inf设为0
     data = data.replace(np.inf, 1)
     data = data.replace(-np.inf, 0)
 
     
     target_ptm_type = 'Phosphorylation'
-    # target_res = [res_mapping['S'], res_mapping['T'], res_mapping['Y']]  # 16 17 18
     target_res = ['S', 'T', 'Y']
 
     train_data, train_label = [], []
@@ -98,7 +95,7 @@ def generate_1d_data(data_file, train_names, test_names):
                 elif names in test_names:
                     test_data.append(content)
                     test_label.append(0)
-        elif data.loc[indexs].values[5] == 'FP':  # 如果是目标ptm类型  
+        elif data.loc[indexs].values[5] == 'FP':  # if label is 'FP'  
             if target_ptm_type in ptm_types:
                 # content = np.hstack((np.array(data1.loc[indexs].values[3]), np.array(data1.loc[indexs].values[7:])))
                 content = np.array(data.loc[indexs].values[7:])
@@ -121,7 +118,7 @@ def generate_1d_data(data_file, train_names, test_names):
 
 def get_data(read_file):  
     """
-    把文件内容变为字典
+    Change the content of the file into a dictionary
     """
 
     data = pd.read_excel(read_file)
@@ -129,10 +126,8 @@ def get_data(read_file):
     ss_mapping = {'-':1,'H':2, 'S':3, 'G':4, 'T':5, 'E':6, 'B':7, 'I':8}
     data['secondary_structure'] = data['secondary_structure'].map(ss_mapping)
     
-    # 把空值填充为0
     data = data.fillna(0)
         
-    # 把inf设为1, -inf设为0
     data = data.replace(np.inf, 1)
     data = data.replace(-np.inf, 0)
 
@@ -145,9 +140,9 @@ def get_data(read_file):
         if pdb != cur_pdb:
             cur_pdb = pdb 
             pdb_site_type_feature[cur_pdb] = {}
-            cur_count = 0  # 表示第一个位点
+            cur_count = 0  # first residue
         if pdb == cur_pdb:
-            s_type = str(data.loc[indexs].values[3]) + '_' + str(data.loc[indexs].values[4]) + '_' + data.loc[indexs].values[5] + '_' + data.loc[indexs].values[6] # 位点类型
+            s_type = str(data.loc[indexs].values[3]) + '_' + str(data.loc[indexs].values[4]) + '_' + data.loc[indexs].values[5] + '_' + data.loc[indexs].values[6] 
             cur_count += 1
             site_type = str(cur_count) + '_' + s_type 
             pdb_site_type_feature[cur_pdb][site_type] = np.array(data.loc[indexs].values[7:])
@@ -157,11 +152,12 @@ def get_data(read_file):
 
 def generate_2d_data(read_dict, window_num, data_names, save_data_file, save_label_file): 
     """
-    读取文件，选取位点及其左右的window_num个位点，创建训练集和测试集的二维矩阵数据
+    Read the file, select the ptm site and its left and right window_num sites, 
+    and create the training set and test set
     """
 
-    pdb_array = {}    # pdb的全部特征组成的数组
-    pdb_site_type = {}  # pdb的位点对应的特征
+    pdb_array = {}    # An array of all the features 
+    pdb_site_type = {}  # The corresponding feature of residues
     for pdb in pdb_site_type_feature.keys():
         pdb_array[pdb] = []
         pdb_site_type[pdb] = []
@@ -196,25 +192,25 @@ def generate_2d_data(read_dict, window_num, data_names, save_data_file, save_lab
             ptm_types = s_t.split('_')[4].split(' ')    
             # continue      
             if sitetype in types.keys(): 
-                if res not in target_res: # 如果不属于S Y T 则跳过
+                if res not in target_res: 
                     continue
-                if (sitetype == 'FP' or sitetype == 'NP') and target_ptm_type not in ptm_types:  # 如果是PTM 但不是磷酸化 则跳过
+                if (sitetype == 'FP' or sitetype == 'NP') and target_ptm_type not in ptm_types:  # If it is PTM, but not phosphorylation, then skip
                     continue
                 pdb_position = pdb + '_' + str(position)
-                # 如果不在数据集
+                
                 if pdb_position not in data_names:
                     continue
                 array = np.zeros((2 * window + 1, feature_num))
-                array[window] = pdb_array[pdb][site-1]  # 在二维数组中间放入该位点的特征向量.列表从0开始 所以要减1
+                array[window] = pdb_array[pdb][site-1]  # Put the feature vector of the site in the two-dimensional array. List index starts from 0
                 cur_window = window  # 6
                 cur_site = site # 1
-                while cur_site > 1 and cur_window > 0: # 填充前6行
+                while cur_site > 1 and cur_window > 0: # Fill the first 6 rows
                     cur_window -= 1
                     cur_site -= 1
                     array[cur_window] = pdb_array[pdb][cur_site-1]
                 cur_window = window  # 6
                 cur_site = site # 1
-                while cur_site < length and cur_window < 2 * window:  # 填充后6行
+                while cur_site < length and cur_window < 2 * window: # Fill the last 6 rows
                     cur_window += 1
                     cur_site += 1
                     array[cur_window] = pdb_array[pdb][cur_site-1]
