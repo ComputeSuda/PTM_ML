@@ -19,13 +19,13 @@ import random
 
 def build_model(dim1, dim2):
     """
-    构建模型
+    Building model
     """
 
     input_x = Input(shape=(dim1, dim2))
     input_xx = layers.BatchNormalization()(input_x)
 
-    x_1 = layers.Conv1D(200, 1, padding='same')(input_xx) # 输出维度200 卷积核1
+    x_1 = layers.Conv1D(200, 1, padding='same')(input_xx) 
     x_1 = activations.relu(x_1)
 
     x_1 = layers.Conv1D(150, 3, padding='same')(x_1)
@@ -61,15 +61,15 @@ def build_model(dim1, dim2):
 
 def sample_train_data(data, label):
     """
-    对数据进行采样，新的样本中正负样本比例为 1:1
+    Sample the data, and the proportion of positive and negative samples in the new sample is 1:1
     """
-    class_0_index = np.where(label==0)[0]  # 找出0类的索引
+    class_0_index = np.where(label==0)[0]  # find class 0 indexs
     class_1_index = np.where(label==1)[0]
 
-    data_0 = data[class_0_index]  # 类别0的数据
-    data_1 = data[class_1_index]
+    data_0 = data[class_0_index]  # class 0 data
+    data_1 = data[class_1_index]  # class 1 data
 
-    # 从负样本中采样和正样本一样数量的负样本
+    # Sampling from negative samples and the same number of negative samples
     random_class_0 = random.sample(range(0, len(data_0)), len(data_1))
 
     sample_data = np.vstack([data_0[random_class_0], data_1])
@@ -83,7 +83,7 @@ def sample_train_data(data, label):
 
 def train_model(train_data_file, train_label_file, models_num):
     """
-    在训练集上训练模型
+    Training model on training set
     """
 
     epochs = 80
@@ -93,7 +93,7 @@ def train_model(train_data_file, train_label_file, models_num):
     train_data = np.load(train_data_file, allow_pickle=True).astype(float)
     train_label = np.load(train_label_file)
 
-    # 重复models_num次 每次进行 1:1的采样，训练对应的模型
+    # The 1:1 sampling was repeated models_num times to train the corresponding model
     for model_number in range(models_num):      
         data, label = sample_train_data(train_data, train_label)
         # print(data.shape, label.shape)
@@ -123,7 +123,7 @@ def train_model(train_data_file, train_label_file, models_num):
 
 def test_model(test_data_file, test_label_file, models_num):
     """
-    在测试集上测试模型
+    Test model on test set
     """
 
     test_data = np.load(test_data_file, allow_pickle=True).astype(float)

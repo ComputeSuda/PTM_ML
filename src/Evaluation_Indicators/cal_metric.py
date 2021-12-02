@@ -4,15 +4,13 @@ from sklearn.metrics import *
 
 def cal_two_class_metric(true_label, pred_prob):  
     """
-    计算各项评估指标值
+    Calculate the value of each evaluation index
     """
 
-    pred_label = pred_prob.copy()     # 概率
-    pred_label[pred_label>=0.5] = 1    # 类别
-    pred_label[pred_label<0.5] = 0
+    pred_label = pred_prob.copy()     # prediction probability
+    pred_label[pred_label>=0.5] = 1    # prediction label
+    pred_label[pred_label<0.5] = 0    # prediction label
 
-    # print(pred_prob[:20])
-    # print(pred_label[:20])
 
     m = {}
 
@@ -36,7 +34,7 @@ def cal_two_class_metric(true_label, pred_prob):
     # sensitivity = recall_score(true_label, pred_label, labels=None, pos_label=1, average='binary', sample_weight=None)
     sen = TP / (TP + FN)
     # print('sensitivity:', sensitivity, sen)
-    m['sensitivity'] = round(sen, 3)  # 就是recall
+    m['sensitivity'] = round(sen, 3)  # recall
 
     specificity = TN / (TN + FP)
     # print('specificity:', specificity)
