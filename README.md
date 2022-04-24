@@ -1,15 +1,15 @@
-This repo is for Functional PTM Predictions
+This repo is for Functional PTM Predictions(cDL-FuncPhos) and Phosphorylation/Acetylation/Ubiquitination(cDL-PAU) Predictions
 =========================================
 
 - ## 1. Purpose
 
-    To predict Functional-PTM site using deep learning method.
+    To predict Functional-PTM site(cDL-FuncPhos) or Phosphorylation/Acetylation/Ubiquitination PTM site(cDL-PAU) using deep learning method.
 
     ## 2.Repo Contents
     - Datasets: All datasets.
     - Evaluation_Indicators: evaluation index functions.
     - fig: plotting ROC curves.
-    - src: genarating data, traing or predicting model.
+    - src: genarating data, traing or predicting model codes.
 
     ## 3. System requirements
 
@@ -33,7 +33,11 @@ This repo is for Functional PTM Predictions
 
     - To predict Functional PTM site using all(seq+str+dyn) features, run the following command:
 
-        python ./src/model.py
+        python ./src/cDL_FuncPhos_model.py
+
+    - To predict Phosphorylation/Acetylation/Ubiquitination PTM site using all(seq+str+dyn) features, run the following command:
+
+        python ./src/cDL_PAU_model.py
 
     ### Training and testing data are provided in the folder of ./Datasets.
 
